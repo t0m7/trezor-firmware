@@ -1479,7 +1479,7 @@ void signing_txack(TransactionType *tx) {
         return;
       }
       if (idx2 == input.prev_index) {
-        if (!input.has_amount || input.amount != tx->bin_outputs[0].amount) {
+        if (input.amount != tx->bin_outputs[0].amount) {
           fsm_sendFailure(FailureType_Failure_DataError,
                           _("Invalid amount specified"));
           signing_abort();
