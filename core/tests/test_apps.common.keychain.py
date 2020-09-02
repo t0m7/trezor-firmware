@@ -9,6 +9,7 @@ from apps.common.paths import path_is_hardened
 from apps.common.keychain import LRUCache, Keychain, with_slip44_keychain, get_keychain
 from trezor import wire
 from trezor.crypto import bip39
+from trezor.messages import SafetyCheckLevel
 
 
 class TestKeychain(unittest.TestCase):
@@ -38,7 +39,7 @@ class TestKeychain(unittest.TestCase):
                 keychain.verify_path(f)
 
         # turn off restrictions
-        storage.device.set_safety_checks_prompt(True)
+        storage.device.set_safety_check_level(SafetyCheckLevel.Prompt)
         for path in correct + fails:
             keychain.verify_path(path)
 
