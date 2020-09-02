@@ -3,10 +3,11 @@ from ubinascii import hexlify
 
 from storage import common
 from trezor.crypto import random
-from trezor.messages import BackupType
+from trezor.messages import BackupType, SafetyCheckLevel
 
 if False:
     from trezor.messages.ResetDevice import EnumTypeBackupType
+    from trezor.messages.ApplySettings import EnumTypeSafetyCheckLevel
     from typing import Optional
 
 # Namespace:
@@ -34,9 +35,10 @@ _SLIP39_IDENTIFIER         = const(0x10)  # bool
 _SLIP39_ITERATION_EXPONENT = const(0x11)  # int
 _SD_SALT_AUTH_KEY          = const(0x12)  # bytes
 INITIALIZED                = const(0x13)  # bool (0x01 or empty)
-_SAFETY_CHECKS_PROMPT      = const(0x14)  # bool (0x01 or empty)
+_SAFETY_CHECK_LEVEL        = const(0x14)  # int
 
 _DEFAULT_BACKUP_TYPE       = BackupType.Bip39
+_DEFAULT_SAFETY_CHECK_LEVEL = SafetyCheckLevel.Strict
 # fmt: on
 
 HOMESCREEN_MAXSIZE = 16384
@@ -283,9 +285,16 @@ def set_sd_salt_auth_key(auth_key: Optional[bytes]) -> None:
         return common.delete(_NAMESPACE, _SD_SALT_AUTH_KEY, public=True)
 
 
-def safety_checks_prompt() -> bool:
-    return common.get_bool(_NAMESPACE, _SAFETY_CHECKS_PROMPT)
+def safety_check_level() -> EnumTypeSafetyCheckLevel:
+    level = common.get_uint8(_NAMESPACE, _SAFETY_CHECK_LEVEL)
+    if level is None:
+        level = _DEFAULT_SAFETY_CHECK_LEVEL
+    if level not in (SafetyCheckLevel.Strict, SafetyCheckLevel.Prompt):
+        raise RuntimeError
+    return level  # type: ignore
 
 
-def set_safety_checks_prompt(allowed: bool) -> None:
-    common.set_bool(_NAMESPACE, _SAFETY_CHECKS_PROMPT, allowed)
+def set_safety_check_level(level: EnumTypeSafetyCheckLevel) -> None:
+    if level not in (SafetyCheckLevel.Strict, SafetyCheckLevel.Prompt):
+        raise ValueError
+    common.set_uint8(_NAMESPACE, _SAFETY_CHECK_LEVEL, level)

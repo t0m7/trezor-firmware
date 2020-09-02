@@ -82,10 +82,10 @@ async def apply_settings(ctx: wire.Context, msg: ApplySettings):
         workflow.idle_timer.set(storage.device.get_autolock_delay_ms(), lock_device)
 
     if msg.safety_checks is not None:
+        if msg.safety_checks not in (SafetyCheckLevel.Strict, SafetyCheckLevel.Prompt):
+            raise wire.DataError("Invalid safety check level")
         await require_confirm_safety_checks(ctx, msg.safety_checks)
-        storage.device.set_safety_checks_prompt(
-            msg.safety_checks == SafetyCheckLevel.Prompt
-        )
+        storage.device.set_safety_check_level(msg.safety_checks)
 
     if msg.display_rotation is not None:
         await require_confirm_change_display_rotation(ctx, msg.display_rotation)
