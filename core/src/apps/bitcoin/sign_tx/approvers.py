@@ -94,7 +94,7 @@ class BasicApprover(Approver):
 
         # fee > (coin.maxfee per byte * tx size)
         if fee > fee_threshold:
-            if fee > 10 * fee_threshold and not device.unsafe_prompts_allowed():
+            if fee > 10 * fee_threshold and not device.safety_checks_prompt():
                 raise wire.DataError("The fee is unexpectedly large")
             await helpers.confirm_feeoverthreshold(fee, self.coin)
         if self.change_count > self.MAX_SILENT_CHANGE_COUNT:

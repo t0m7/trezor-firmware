@@ -83,7 +83,7 @@ async def apply_settings(ctx: wire.Context, msg: ApplySettings):
 
     if msg.safety_checks is not None:
         await require_confirm_safety_checks(ctx, msg.safety_checks)
-        storage.device.set_unsafe_prompts_allowed(
+        storage.device.set_safety_checks_prompt(
             msg.safety_checks == SafetyCheckLevel.Prompt
         )
 

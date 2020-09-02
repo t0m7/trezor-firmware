@@ -38,7 +38,7 @@ class TestKeychain(unittest.TestCase):
                 keychain.verify_path(f)
 
         # turn off restrictions
-        storage.device.set_unsafe_prompts_allowed(True)
+        storage.device.set_safety_checks_prompt(True)
         for path in correct + fails:
             keychain.verify_path(path)
 

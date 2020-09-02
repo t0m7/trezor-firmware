@@ -105,7 +105,7 @@ class Keychain:
         if "ed25519" in self.curve and not paths.path_is_hardened(path):
             raise wire.DataError("Non-hardened paths unsupported on Ed25519")
 
-        if device.unsafe_prompts_allowed():
+        if device.safety_checks_prompt():
             return
 
         if any(ns == path[: len(ns)] for ns in self.namespaces):
@@ -136,7 +136,7 @@ class Keychain:
         )
 
     def derive_slip21(self, path: paths.Slip21Path) -> Slip21Node:
-        if not device.unsafe_prompts_allowed() and not any(
+        if not device.safety_checks_prompt() and not any(
             ns == path[: len(ns)] for ns in self.slip21_namespaces
         ):
             raise FORBIDDEN_KEY_PATH

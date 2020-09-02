@@ -34,7 +34,7 @@ _SLIP39_IDENTIFIER         = const(0x10)  # bool
 _SLIP39_ITERATION_EXPONENT = const(0x11)  # int
 _SD_SALT_AUTH_KEY          = const(0x12)  # bytes
 INITIALIZED                = const(0x13)  # bool (0x01 or empty)
-_UNSAFE_PROMPTS_ALLOWED    = const(0x14)  # bool (0x01 or empty)
+_SAFETY_CHECKS_PROMPT      = const(0x14)  # bool (0x01 or empty)
 
 _DEFAULT_BACKUP_TYPE       = BackupType.Bip39
 # fmt: on
@@ -283,9 +283,9 @@ def set_sd_salt_auth_key(auth_key: Optional[bytes]) -> None:
         return common.delete(_NAMESPACE, _SD_SALT_AUTH_KEY, public=True)
 
 
-def unsafe_prompts_allowed() -> bool:
-    return common.get_bool(_NAMESPACE, _UNSAFE_PROMPTS_ALLOWED)
+def safety_checks_prompt() -> bool:
+    return common.get_bool(_NAMESPACE, _SAFETY_CHECKS_PROMPT)
 
 
-def set_unsafe_prompts_allowed(allowed: bool) -> None:
-    common.set_bool(_NAMESPACE, _UNSAFE_PROMPTS_ALLOWED, allowed)
+def set_safety_checks_prompt(allowed: bool) -> None:
+    common.set_bool(_NAMESPACE, _SAFETY_CHECKS_PROMPT, allowed)
