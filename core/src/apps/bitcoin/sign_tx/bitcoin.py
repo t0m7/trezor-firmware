@@ -103,8 +103,9 @@ class Bitcoin:
         # legacy inputs in Step 4.
         self.h_approved = self.create_hash_writer()  # not a real tx hash
 
-        # h_inputs is used to make sure that the inputs streamed for approval in
-        # Step 1 are the same as the ones streamed for verification in Step 4.
+        # h_inputs is a digest of the inputs streamed for approval in Step 1, which
+        # is used to ensure that the inputs streamed for verification in Step 4 are
+        # the same as those in Step 1.
         self.h_inputs = bytes()
 
         # BIP-0143 transaction hashing
